@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using BrotherBot.Commands;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
@@ -25,6 +26,7 @@ namespace BrotherBot
 
             var config = new DiscordConfiguration()
             {
+                Intents = DiscordIntents.All,
                 Token = configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
@@ -41,10 +43,14 @@ namespace BrotherBot
                 StringPrefixes = new string[] { configJson.Prefix },
                 EnableMentionPrefix = true,
                 EnableDms = true,
+                EnableDefaultHelp = false
             };
 
-            await Client.ConnectAsync();
+            Commands = Client.UseCommandsNext(commandsConfig);
 
+            Commands.RegisterCommands<BingBongCommands>();
+
+            await Client.ConnectAsync();
             await Task.Delay(-1);
         }
 
