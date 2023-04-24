@@ -6,6 +6,7 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Newtonsoft.Json;
 using System.Text;
+using System.Timers;
 
 namespace BrotherBot
 {
@@ -14,6 +15,8 @@ namespace BrotherBot
         public DiscordClient Client { get; private set; }
         public InteractivityExtension Interactivity { get; private set; }
         public CommandsNextExtension Commands { get; private set; }
+
+        private BirthdayCommands _birthdayCommands = new BirthdayCommands();
 
         public async Task RunAsync()
         {
@@ -49,14 +52,37 @@ namespace BrotherBot
             Commands = Client.UseCommandsNext(commandsConfig);
 
             Commands.RegisterCommands<BingBongCommands>();
+            Commands.RegisterCommands<BirthdayCommands>();
+
 
             await Client.ConnectAsync();
+
+            await HourTimer();
+
+            //keeps bot up
             await Task.Delay(-1);
+
         }
 
         private Task OnClientReady(ReadyEventArgs e)
         {
             return Task.CompletedTask;
+        }
+
+        private async Task HourTimer()
+        {
+            var timer = new System.Timers.Timer(3600000); //hour timer
+            timer.Elapsed += async (sender, e) =>
+            {
+                var lastCheckedAt = DateTime.Now;
+                if(lastCheckedAt.Hour == 4)
+                {
+                    _birthdayCommands.GetBirthdays();
+                }
+
+            };
+
+            timer.Start();
         }
     }
 }
