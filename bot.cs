@@ -21,8 +21,6 @@ namespace BrotherBot
 
         private BirthdayCommands _birthdayCommands = new BirthdayCommands();
 
-
-
         public async Task RunAsync()
         {
             var json = string.Empty;
@@ -110,11 +108,21 @@ namespace BrotherBot
                 var lastCheckedAt = DateTime.Now;
                 if(lastCheckedAt.Hour == 4)
                 {
-                    _birthdayCommands.GetBirthdays();
+                    DiscordChannel channel = await Client.GetChannelAsync(199035901622353920);
+                    List<ulong> ids = await _birthdayCommands.GetBirthdaysAsync();
+                    foreach (ulong id in ids)
+                    {
+                        DiscordUser user = await Client.GetUserAsync(id);
+
+                        var birthdayMessage = new DiscordEmbedBuilder()
+                        {
+                            Description = "Happy Birthday " + user.Mention + "!",
+                            Color = DiscordColor.Teal
+                        };
+                        await channel.SendMessageAsync(birthdayMessage);
+                    }
                 }
-
             };
-
             timer.Start();
         }
     }

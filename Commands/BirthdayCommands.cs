@@ -26,23 +26,22 @@ namespace BrotherBot.Commands
                 return;
             }
 
-            string nameDiscriminator = ctx.Member.Username + "#" + ctx.Member.Discriminator;
             List<string> lines = File.ReadAllLines(filePath).ToList();
             bool notThere = true;
             foreach (string line in lines)
             {
                 List<string> splitLine = line.Split(':').ToList();
-                if (splitLine[0] == nameDiscriminator)
+                if (splitLine[0] == ctx.User.Id.ToString())
                 {
                     notThere = false;
                     lines.Remove(line);
-                    lines.Add(nameDiscriminator + ":" + dayOfTheYear);
+                    lines.Add(ctx.User.Id.ToString() + ":" + dayOfTheYear);
                     break;
                 }
             }
             if (notThere) 
             {
-                lines.Add(nameDiscriminator + ":" + dayOfTheYear);
+                lines.Add(ctx.User.Id.ToString() + ":" + dayOfTheYear);
             }
 
             File.WriteAllLines(filePath, lines.ToArray());
@@ -51,17 +50,21 @@ namespace BrotherBot.Commands
         }
 
 
-        public List<string> GetBirthdays()
+        public async Task<List<ulong>> GetBirthdaysAsync()
         {
             var day = DateTime.Now.DayOfYear;
+            List<ulong> ids = new List<ulong>();
             List<string> lines = File.ReadAllLines(filePath).ToList();
-
             foreach(string line in lines)
             {
-                
+                List<string> nameDate = line.Split(':').ToList();
+                if (day == Int32.Parse(line.Split(':').ToList()[1])) 
+                {
+                    ids.Add(Convert.ToUInt64(nameDate[0]));
+                }
             }
-
-            return new List<string>();
+            ids.Sort();
+            return ids;
         }
     }
 }
