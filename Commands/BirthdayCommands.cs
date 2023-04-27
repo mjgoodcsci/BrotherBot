@@ -17,7 +17,7 @@ namespace BrotherBot.Commands
             {
                 int month = Int32.Parse(monthDay.Split('/')[0]);
                 int day = Int32.Parse(monthDay.Split('/')[1]);
-                DateTime dateTime = new DateTime(2000, month, day);
+                DateTime dateTime = new DateTime(2001, month, day);
                 dayOfTheYear = dateTime.DayOfYear;
             }
             catch 
