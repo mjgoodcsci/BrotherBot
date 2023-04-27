@@ -18,6 +18,8 @@ namespace BrotherBot
 
         private BirthdayCommands _birthdayCommands = new BirthdayCommands();
 
+
+
         public async Task RunAsync()
         {
             var json = string.Empty;
@@ -51,8 +53,9 @@ namespace BrotherBot
 
             Commands = Client.UseCommandsNext(commandsConfig);
 
-            Commands.RegisterCommands<BingBongCommands>();
+            Commands.RegisterCommands<GeneralCommands>();
             Commands.RegisterCommands<BirthdayCommands>();
+            Commands.RegisterCommands<HigherLowerGameCommands>();
 
 
             await Client.ConnectAsync();
