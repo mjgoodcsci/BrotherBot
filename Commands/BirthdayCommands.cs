@@ -9,6 +9,7 @@ namespace BrotherBot.Commands
         string filePath = @"..\..\..\Birthdays.txt";
         // !setbirthday sets birthday
         [Command("setbirthday")]
+        [RequireRoles(RoleCheckMode.MatchNames, "PKF")]
         public async Task setBirthdayCommand(CommandContext ctx, string monthDay)
         {
             int dayOfTheYear = 0;

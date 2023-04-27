@@ -1,6 +1,9 @@
 ﻿using BrotherBot.Commands;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.CommandsNext.Exceptions;
+using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
@@ -57,6 +60,7 @@ namespace BrotherBot
             Commands.RegisterCommands<BirthdayCommands>();
             Commands.RegisterCommands<HigherLowerGameCommands>();
 
+            Commands.CommandErrored += onCommandError;
 
             await Client.ConnectAsync();
 
@@ -65,6 +69,32 @@ namespace BrotherBot
             //keeps bot up
             await Task.Delay(-1);
 
+        }
+
+        //command error (so far only checks for cooldown error
+        private async Task onCommandError(CommandsNextExtension sender, CommandErrorEventArgs args)
+        {
+            if(args.Exception is ChecksFailedException)
+            {
+                var castedException = (ChecksFailedException) args.Exception ;
+                string cooldownTimer = string.Empty;
+
+                foreach (var check in castedException.FailedChecks)
+                {
+                    var cooldown = (CooldownAttribute) check;
+                    TimeSpan timeleft = cooldown.GetRemainingCooldown(args.Context);
+                    cooldownTimer = timeleft.ToString(@"hh\:mm\:ss");
+                }
+
+                var cooldownMessage = new DiscordEmbedBuilder()
+                {
+                    Title = "Wait for the cooldown to end.",
+                    Description = "Remaining time: " + cooldownTimer,
+                    Color = DiscordColor.IndianRed
+                };
+
+                await args.Context.Channel.SendMessageAsync(cooldownMessage);
+            }
         }
 
         private Task OnClientReady(ReadyEventArgs e)

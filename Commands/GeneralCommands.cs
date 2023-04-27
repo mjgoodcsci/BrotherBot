@@ -14,12 +14,12 @@ namespace BrotherBot.Commands
             {
                 Title = "List of Commands I can do:",
                 Description = "!brotherhelp -- list of commands \n" +
-                              "!whatis <text> -- tells you what <text> is \n" +
+                              "!whatis <text> -- tells you what <text> is (Only for PKF Role) \n" +
                               "!james -- sends a great emoji here \n" +
                               "!add <number> <number> -- adds two numbers together and sends the result \n" +
                               "!bing -- try it out :) \n" +
-                              "!higherlower -- game where you react with an emoji whether the next card will be higher or lower or the same \n" +
-                              "!setbirthday <month/day> -- adds your birthday to the bot (WIP) \n",
+                              "!higherlower -- game where you react with an emoji whether the next card will be higher or lower or the same (Only available to PKF role and only one instance possible at a time) \n" +
+                              "!setbirthday <month/day> -- adds your birthday to the bot (WIP) (Only for PKF Role) \n",
                 Color = DiscordColor.Teal,
             };
 
@@ -28,6 +28,7 @@ namespace BrotherBot.Commands
 
         // !whatis takes in a name and returns "name is a bitch"
         [Command("whatis")]
+        [RequireRoles(RoleCheckMode.MatchNames, "PKF")]
         public async Task isBitch(CommandContext ctx, string name)
         {
             string answer = name + " is a bitch";
@@ -35,6 +36,7 @@ namespace BrotherBot.Commands
         }
         // !james returns the JamesJoker emoji
         [Command("james")]
+        
         public async Task jamesCommand(CommandContext ctx)
         {
             var jamesEmoji = DiscordEmoji.FromName(ctx.Client, ":JamesJoker:", true);
