@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BrotherBot.Commands
 {
