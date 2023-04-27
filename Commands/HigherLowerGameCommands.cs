@@ -16,6 +16,8 @@ namespace BrotherBot.Commands
         // !higherlower game where user reacts to an arrow emoji to guess whether the next card will
         // be higher or lower than previous card
         [Command("higherlower")]
+        [RequireRoles(RoleCheckMode.MatchNames, "PKF")]
+        [Cooldown(1, 16, CooldownBucketType.Global)]
         public async Task HigherLowerCardGame(CommandContext ctx)
         {
             var interactivity = ctx.Client.GetInteractivity();
